@@ -1,0 +1,359 @@
+swagger: '2.0'
+info:
+  description: 国民体制监测系统API
+  version: 0.0.1
+  title: 国民体制监测系统
+host: localhost:8080
+basePath: /
+tags:
+  - name: oauth
+    description: 认证管理
+  - name: user
+    description: 用户管理
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  BasicAuth:
+    type: basic
+  OAuth2:
+    type: oauth2
+    flow: password
+    tokenUrl: http://localhost:8080/v1/oauth/token
+    scopes:
+      teacher: 老师
+      root: 资料录入员
+security:
+  - OAuth2:
+      - teacher
+      - root
+
+paths:
+  /v1/oauth/token:
+    post:
+      tags:
+        - oauth
+      summary: 权限认证
+      description: 权限认证
+      operationId: Token
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: username
+          in: formData
+          description: 用户名
+          type: string
+          required: true
+        - name: password
+          in: formData
+          description: 密码
+          type: string
+          required: true
+        - name: grant_type
+          in: formData
+          description: 认证类型
+          type: string
+          required: true
+          default: password
+        - name: scope
+          in: formData
+          description: 参数
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/Token'
+      security: []
+  /v1/login:
+    post:
+      tags:
+        - user
+      summary: 用户登陆
+      description: 用户登陆
+      operationId: Login
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: username
+          in: formData
+          description: 用户名
+          type: string
+          required: true
+        - name: password
+          in: formData
+          description: 密码
+          type: string
+          required: true
+      responses:
+        200:
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/Token'
+      security: []
+  /v1/logout:
+    post:
+      tags:
+        - user
+      summary: 用户登出
+      description: 用户登出
+      operationId: Logout
+      responses:
+        200:
+          description: A successful response.
+      security: []
+  /v1/user/{id}:
+    get:
+      tags:
+        - user
+      summary: 获取用户信息
+      description: 获取单个用户的详细信息
+      operationId: GetUser
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: 用户ID
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/User'
+      security:
+        - OAuth2: [root]
+    put:
+      tags:
+        - user
+      summary: 编辑用户
+      description: 编辑单个用户信息
+      operationId: UpdateUser
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: 用户ID
+        - in: body
+          name: body
+          description: 用户参数
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/User'
+      security:
+        - OAuth2: [root]
+    delete:
+      tags:
+        - user
+      summary: 删除用户
+      description: 删除单个用户
+      operationId: DeleteUser
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: 用户ID
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/User'
+      security:
+        - OAuth2: [root]
+  /v1/user:
+    get:
+      tags:
+        - user
+      summary: 获取当前用户信息
+      description: 获取当前用户信息
+      operationId: GetUserInfo
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/User'
+      security:
+        - OAuth2: [root]
+    post:
+      tags:
+        - user
+      summary: 创建用户
+      description: 创建用户
+      operationId: CreateUser
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: 用户信息
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/User'
+      security:
+        - OAuth2: [root]
+    patch:
+      tags:
+        - user
+      summary: 修改密码
+      description: 修改密码
+      operationId: ModifyUserPassword
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: username
+          in: query
+          description: 用户名
+          type: string
+        - name: old_password
+          in: formData
+          description: 原始密码
+          type: string
+          required: true
+        - name: new_password
+          in: formData
+          description: 新密码
+          type: string
+          required: true
+      responses:
+        '200':
+          description: ok
+      security:
+        - OAuth2: [root]
+  /v1/users:
+    get:
+      tags:
+        - user
+      summary: 获取用户列表
+      description: 获取用户列表
+      operationId: GetUsers
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: skip
+          description: 翻过条目数
+          type: integer
+          format: int64
+        - in: query
+          name: limit
+          description: 限制条目数
+          type: integer
+          format: int64
+        - in: query
+          name: query
+          description: 筛选条件
+          type: string
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/Users'
+      security:
+        - OAuth2: [root]
+
+definitions:
+  Token:
+    type: object
+    properties:
+      access_token:
+        type: string
+        description: jwt token
+        x-omitempty: false
+      token_type:
+        type: string
+        description: token的类型
+        default: "Bearer"
+        x-omitempty: false
+      expires_in:
+        type: string
+        description: token过期时间(秒)
+        x-omitempty: false
+      expires_at:
+        type: string
+        description: token过期时间(timestamp)
+        x-omitempty: false
+  Principal:
+    type: object
+    description: OAuth2鉴权信息
+    properties:
+      id:
+        description: 用户ID(唯一)
+        type: string
+        x-omitempty: false
+      name:
+        description: 用户名(唯一)
+        type: string
+        x-omitempty: false
+      role:
+        type: string
+        description: 当前角色
+        x-omitempty: false
+  Users:
+    type: object
+    description: 用户列表
+    properties:
+      total_count:
+        type: integer
+        format: int64
+        x-omitempty: false
+        description: 所有用户总数
+      items:
+        type: array
+        x-omitempty: false
+        description: 用户列表
+        items:
+          $ref: '#/definitions/User'
+  User:
+    type: object
+    description: 用户信息
+    properties:
+      id:
+        type: string
+        x-omitempty: false
+        readOnly: true
+      name:
+        type: string
+        x-omitempty: false
+        description: 用户名
+      ps:
+        type: string
+        x-omitempty: false
+        description: 用户密码
+      role:
+        type: string
+        x-omitempty: false
+        description: 用户角色
+        enum:
+          - student
+          - teacher
+          - data_entry
+      phone:
+        type: string
+        x-omitempty: false
+        description: 电话号码
+      email:
+        type: string
+        x-omitempty: false
+        description: 邮箱
+externalDocs:
+  description: Find out more about Swagger
+  url: 'https://github.com/kaisawind/iotx'
