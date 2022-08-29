@@ -346,6 +346,7 @@ definitions:
           - student
           - teacher
           - data_entry
+          - root
       phone:
         type: string
         x-omitempty: false
