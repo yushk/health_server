@@ -150,7 +150,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "root"
+              "root",
+              "teacher",
+              "other"
             ]
           }
         ],
@@ -260,7 +262,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "root"
+              "root",
+              "teacher",
+              "other"
             ]
           }
         ],
@@ -366,7 +370,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "root"
+              "root",
+              "teacher",
+              "other"
             ]
           }
         ],
@@ -498,7 +504,8 @@ func init() {
           "enum": [
             "student",
             "teacher",
-            "data_entry"
+            "data_entry",
+            "root"
           ],
           "x-omitempty": false
         }
@@ -534,6 +541,7 @@ func init() {
       "flow": "password",
       "tokenUrl": "http://localhost:8080/v1/oauth/token",
       "scopes": {
+        "other": "其他角色",
         "root": "资料录入员",
         "teacher": "老师"
       }
@@ -542,6 +550,7 @@ func init() {
   "security": [
     {
       "OAuth2": [
+        "other",
         "teacher",
         "root"
       ]
@@ -695,7 +704,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "root"
+              "other",
+              "root",
+              "teacher"
             ]
           }
         ],
@@ -805,7 +816,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "root"
+              "other",
+              "root",
+              "teacher"
             ]
           }
         ],
@@ -911,7 +924,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "root"
+              "other",
+              "root",
+              "teacher"
             ]
           }
         ],
@@ -1043,7 +1058,8 @@ func init() {
           "enum": [
             "student",
             "teacher",
-            "data_entry"
+            "data_entry",
+            "root"
           ],
           "x-omitempty": false
         }
@@ -1079,6 +1095,7 @@ func init() {
       "flow": "password",
       "tokenUrl": "http://localhost:8080/v1/oauth/token",
       "scopes": {
+        "other": "其他角色",
         "root": "资料录入员",
         "teacher": "老师"
       }
@@ -1087,6 +1104,7 @@ func init() {
   "security": [
     {
       "OAuth2": [
+        "other",
         "teacher",
         "root"
       ]

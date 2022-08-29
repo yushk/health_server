@@ -37,7 +37,7 @@ type User struct {
 	Ps string `json:"ps"`
 
 	// 用户角色
-	// Enum: [student teacher data_entry]
+	// Enum: [student teacher data_entry root]
 	Role string `json:"role"`
 }
 
@@ -59,7 +59,7 @@ var userTypeRolePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["student","teacher","data_entry"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["student","teacher","data_entry","root"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -77,6 +77,9 @@ const (
 
 	// UserRoleDataEntry captures enum value "data_entry"
 	UserRoleDataEntry string = "data_entry"
+
+	// UserRoleRoot captures enum value "root"
+	UserRoleRoot string = "root"
 )
 
 // prop value enum

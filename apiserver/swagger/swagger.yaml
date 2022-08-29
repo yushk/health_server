@@ -24,10 +24,12 @@ securityDefinitions:
     flow: password
     tokenUrl: http://localhost:8080/v1/oauth/token
     scopes:
+      other: 其他角色
       teacher: 老师
       root: 资料录入员
 security:
   - OAuth2:
+      - other
       - teacher
       - root
 
@@ -126,7 +128,7 @@ paths:
           schema:
             $ref: '#/definitions/User'
       security:
-        - OAuth2: [root]
+        - OAuth2: [root, teacher, other ]
     put:
       tags:
         - user
@@ -183,7 +185,7 @@ paths:
           schema:
             $ref: '#/definitions/User'
       security:
-        - OAuth2: [root]
+        - OAuth2: [root, teacher, other ]
     post:
       tags:
         - user
@@ -268,7 +270,7 @@ paths:
           schema:
             $ref: '#/definitions/Users'
       security:
-        - OAuth2: [root]
+        - OAuth2: [root, teacher, other ]
 
 definitions:
   Token:
